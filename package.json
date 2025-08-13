@@ -1,0 +1,44 @@
+{
+  "name": "fieldcanvas-portfolio",
+  "version": "1.0.0",
+  "description": "A minimalistic, responsive portfolio website showcasing physics and Canvas API projects",
+  "main": "index.html",
+  "scripts": {
+    "start": "python -m http.server 8000",
+    "dev": "python -m http.server 8000",
+    "serve": "python -m http.server 8000",
+    "build": "echo 'No build step required - static HTML/CSS/JS'",
+    "test": "echo 'No tests specified'",
+    "lint": "echo 'No linting configured'"
+  },
+  "keywords": [
+    "portfolio",
+    "canvas",
+    "physics",
+    "javascript",
+    "html5",
+    "tailwindcss",
+    "responsive",
+    "minimalistic"
+  ],
+  "author": "CodeByAshuu",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/CodeByAshuu/fieldCanvas.git"
+  },
+  "homepage": "https://github.com/CodeByAshuu/fieldCanvas#readme",
+  "bugs": {
+    "url": "https://github.com/CodeByAshuu/fieldCanvas/issues"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "devDependencies": {},
+  "dependencies": {},
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead"
+  ]
+}
