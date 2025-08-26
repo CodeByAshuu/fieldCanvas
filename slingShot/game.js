@@ -1,15 +1,18 @@
+//game.js
+// Sling Shot - simple 2D slingshot game demo
+
 const canvas = document.getElementById('game');
 const ctx = canvas.getContext('2d');
 
 // --- World settings ---
 const WORLD = { W: 100, H: 56 };            // 16:9 aspect
-const G = 80;                               // gravity (world units / s^2)
-const GROUND_Y = 6;                          // ground thickness
-const SLING_POS = { x: 14, y: 18 };          // base of sling (world coords)
+const G = 70;                               // gravity (world units / s^2)
+const GROUND_Y = 2;                          // ground thickness
+const SLING_POS = { x: 18, y: 18 };          // base of sling (world coords)
 const BAND_REST = 1.8;                       // visual slack
 const PROJECTILE_RADIUS = 1.6;
-const MAX_PULL = 14;                         // max pull distance
-const FRICTION = 0.995;                      // air drag
+const MAX_PULL = 17;                         // max pull distance
+const FRICTION = 1.000;                      // air drag
 const REST_THRESHOLD = 1.2;                  // speed threshold to consider "stopped"
 const RESPAWN_Y_LIMIT = -10;                 // if falls below this (world y), respawn
 
@@ -72,7 +75,7 @@ canvas.addEventListener('pointerup', (e)=>{
     if (projectile && projectile.state==='ready'){
     const pull = limitPull(vector(SLING_POS, dragPoint), MAX_PULL);
     // opposite direction to pull becomes initial velocity
-    const power = 6.5; // tune launch speed
+    const power = 7.5; // tune launch speed
     projectile.vx = -pull.x * power;
     projectile.vy = -pull.y * power;
     projectile.state = 'flying';
