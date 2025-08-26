@@ -194,3 +194,98 @@ function roundRect(c, x, y, w, h, r) {
   c.arcTo(x, y, x + w, y, rr);
   c.closePath();
 }
+
+// Physics and game logic
+function updatePhysics(dt) {
+  // spawn if none
+  if (!projectile || projectile.state === 'despawn') spawnProjectile();
+
+  // while ready and dragging, follow drag point (clamped by maxPull)
+  if (projectile.state === 'ready') {
+    // clamp drag to sling maxPull
+    const pull = vec({ x: SLING.x, y: SLING.y }, dragPoint);
+    const dist = len(pull);
+    if (dist > SLING.maxPull) {
+      const n = normalize(pull);
+      projectile.x = SLING.x + n.x * SLING.maxPull;
+      projectile.y = SLING.y + n.y * SLING.maxPull;
+    } else {
+      projectile.x = dragPoint.x;
+      projectile.y = dragPoint.y;
+    }
+  }
+
+  // flying physics
+  if (projectile.state === 'flying') {
+    projectile.vy -= GRAVITY * dt;
+    projectile.vx *= projConfig.friction;
+    projectile.vy *= projConfig.friction;
+    projectile.x += projectile.vx * dt;
+    projectile.y += projectile.vy * dt;
+
+    // ground
+    if (projectile.y - projectile.r <= GROUND_H) {
+      projectile.y = GROUND_H + projectile.r;
+      projectile.vy = -projectile.vy * 0.42; // bounce
+      projectile.vx *= 0.72;
+      if (Math.hypot(projectile.vx, projectile.vy) < projConfig.restSpeed) projectile.state = 'rest';
+    }
+
+    // walls
+    if (projectile.x - projectile.r < 0) { projectile.x = projectile.r; projectile.vx = -projectile.vx * 0.45; }
+    if (projectile.x + projectile.r > WORLD.W) { projectile.x = WORLD.W - projectile.r; projectile.vx = -projectile.vx * 0.45; }
+
+    // collision with blocks
+    for (const b of targets) {
+      if (!b.alive) continue;
+      if (circleRectCollide(projectile, b)) {
+        // kick the block into falling
+        b.falling = true;
+        b.vx += projectile.vx * 0.22;
+        b.vy += Math.max(6, projectile.vy * 0.14 + 7);
+        b.spin += (Math.random() * 2 - 1) * 2;
+        projectile.vx *= 0.7;
+        projectile.vy *= 0.7;
+      }
+    }
+
+    // despawn if very low
+    if (projectile.y < -18) projectile.state = 'despawn';
+  } else if (projectile.state === 'rest') {
+    projectile.restTimer += dt;
+    if (projectile.restTimer > 1.0) projectile.state = 'despawn';
+  }
+
+  // update blocks
+  for (const b of targets) {
+    if (!b.alive) continue;
+    if (b.falling) {
+      b.vy -= GRAVITY * dt;
+      b.vx *= 0.996;
+      b.vy *= 0.996;
+      b.x += b.vx * dt;
+      b.y += b.vy * dt;
+      b.angle += b.spin * dt;
+
+      // ground
+      if (b.y <= GROUND_H) {
+        b.y = GROUND_H;
+        b.vy = -b.vy * 0.25;
+        b.vx *= 0.8;
+        b.spin *= 0.7;
+        if (Math.hypot(b.vx, b.vy) < 1.6) b.alive = false;
+      }
+    }
+  }
+}
+
+// simple circle-rect collision
+function circleRectCollide(c, r) {
+  const cx = c.x, cy = c.y;
+  const rx1 = r.x, ry1 = r.y;
+  const rx2 = r.x + r.w, ry2 = r.y + r.h;
+  const nearestX = clamp(cx, rx1, rx2);
+  const nearestY = clamp(cy, ry1, ry2);
+  const dx = cx - nearestX, dy = cy - nearestY;
+  return (dx * dx + dy * dy) <= (c.r * c.r);
+}
