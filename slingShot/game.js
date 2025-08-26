@@ -115,3 +115,43 @@ function drawBlock(b) {
   ctx.fillRect(-wpx / 2, -hpx / 2, wpx, 6);
   ctx.restore();
 }
+
+function drawBall(p) {
+  const x = w2sx(p.x), y = w2sy(p.y);
+  const r = (w2sx(p.r) - w2sx(0));
+  ctx.save();
+  ctx.shadowColor = "rgba(15,23,42,.14)";
+  ctx.shadowBlur = 12;
+  ctx.shadowOffsetY = 6;
+  const g = ctx.createRadialGradient(x - r * 0.3, y - r * 0.3, r * 0.1, x, y, r);
+  g.addColorStop(0, "#3b82f6");
+  g.addColorStop(1, "#1e40af");
+  ctx.fillStyle = g;
+  ctx.beginPath();
+  ctx.arc(x, y, r, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.shadowColor = "transparent";
+  ctx.lineWidth = 2;
+  ctx.strokeStyle = "rgba(255,255,255,.8)";
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.arc(x - r * 0.4, y - r * 0.4, r * 0.22, 0, Math.PI * 2);
+  ctx.fillStyle = "rgba(255,255,255,.38)";
+  ctx.fill();
+  ctx.restore();
+}
+
+function drawSling(bird) {
+  // two posts and two bands; bird = current projectile or drag point
+  const baseX = SLING.x - 2.6;
+  const postH = 10, postW = 1.4;
+  const left = { x: baseX, y: SLING.y + postH };
+  const right = { x: baseX + 5, y: SLING.y + postH };
+  const anchorL = { x: left.x + 0.7, y: left.y - 1.8 };
+  const anchorR = { x: right.x - 0.7, y: right.y - 1.8 };
+  const bandTarget = (projectile && projectile.state === 'ready') ? { x: projectile.x, y: projectile.y } : { x: SLING.x, y: SLING.y + 1 };
+  drawBand(anchorL, bandTarget, 5, "rgba(30,58,138,.36)");
+  drawBand(anchorR, bandTarget, 5, "rgba(30,58,138,.56)");
+  drawPost(left, postW, postH);
+  drawPost(right, postW, postH);
+}
