@@ -16,3 +16,21 @@ let SLING = {
 
 // Projectile settings
 const projConfig = { r: 1.6, friction: 0.996, restSpeed: 1.2 };
+
+let canvas, ctx, scale;
+let lastTime = performance.now();
+let projectile = null;
+let targets = [];
+let dragging = false;
+let dragPoint = { x: SLING.x, y: SLING.y };
+
+// Initialize
+function clamp(v, a, b) { return Math.max(a, Math.min(b, v)); }
+function w2sx(x) { return x * scale; }                 // world -> screen x
+function w2sy(y) { return (WORLD.H - y) * scale; }     // world -> screen y (y=0 at bottom)
+function s2w(clientX, clientY) {                      // screen -> world coords
+  const rect = canvas.getBoundingClientRect();
+  const x = (clientX - rect.left) / rect.width * WORLD.W;
+  const y = WORLD.H - (clientY - rect.top) / rect.height * WORLD.H;
+  return { x, y };
+}
