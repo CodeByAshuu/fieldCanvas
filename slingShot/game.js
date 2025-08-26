@@ -38,3 +38,17 @@ function s2w(clientX, clientY) {                      // screen -> world coords
 function vec(a, b) { return { x: b.x - a.x, y: b.y - a.y }; }
 function len(v) { return Math.hypot(v.x, v.y); }
 function normalize(v) { const L = len(v) || 1; return { x: v.x / L, y: v.y / L }; }
+
+//creating/resetting the object
+function spawnProjectile() {
+  // place it near sling anchor; state: 'ready' for dragging
+  projectile = {
+    x: SLING.x,
+    y: SLING.y,
+    vx: 0,
+    vy: 0,
+    r: projConfig.r,
+    state: 'ready',
+    restTimer: 0
+  };
+}
