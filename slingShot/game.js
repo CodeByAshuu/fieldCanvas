@@ -328,3 +328,21 @@ function setupInput() {
   // prevent context menu on long touch
   canvas.addEventListener('contextmenu', (e) => e.preventDefault());
 }
+
+//render + main loop
+function render() {
+  clearScreen();
+  drawGround();
+  for (const b of targets) if (b.alive) drawBlock(b);
+  drawSling(projectile || { x: SLING.x, y: SLING.y });
+  if (projectile) drawBall(projectile);
+}
+
+// main loop
+function loop(now) {
+  const dt = Math.min(0.034, (now - lastTime) / 1000);
+  lastTime = now;
+  updatePhysics(dt);
+  render();
+  requestAnimationFrame(loop);
+}
