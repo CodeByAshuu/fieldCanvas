@@ -67,3 +67,51 @@ function makeTargets() {
   blocks.push(block(baseX + 12, GROUND_H + 16, 10, 3));
   return blocks;
 }
+
+function clearScreen() {
+  ctx.clearRect(0, 0, canvas.width / DEVICE_PIXEL_RATIO, canvas.height / DEVICE_PIXEL_RATIO);
+}
+
+function drawGround() {
+  const y = w2sy(GROUND_H);
+  ctx.save();
+  const grd = ctx.createLinearGradient(0, y, 0, canvas.height / DEVICE_PIXEL_RATIO);
+  grd.addColorStop(0, "#dfeee0");
+  grd.addColorStop(1, "#cfe9d4");
+  ctx.fillStyle = grd;
+  ctx.fillRect(0, y, canvas.width / DEVICE_PIXEL_RATIO, canvas.height / DEVICE_PIXEL_RATIO - y);
+
+  ctx.beginPath();
+  ctx.moveTo(0, y + 0.5);
+  ctx.lineTo(canvas.width / DEVICE_PIXEL_RATIO, y + 0.5);
+  ctx.lineWidth = 1;
+  ctx.strokeStyle = "rgba(15,23,42,.06)";
+  ctx.stroke();
+  ctx.restore();
+}
+
+function drawBlock(b) {
+  const x = w2sx(b.x), yb = w2sy(b.y);
+  const wpx = w2sx(b.w) - w2sx(0);
+  const hpx = w2sy(0) - w2sy(b.h);
+  ctx.save();
+  const cx = x + wpx / 2;
+  const cy = yb - hpx / 2;
+  ctx.translate(cx, cy);
+  ctx.rotate(-b.angle * Math.PI / 180);
+  // box
+  ctx.fillStyle = "#fff";
+  ctx.strokeStyle = "rgba(15,23,42,.10)";
+  ctx.lineWidth = 1;
+  ctx.shadowColor = "rgba(15,23,42,.10)";
+  ctx.shadowBlur = 10;
+  ctx.shadowOffsetY = 6;
+  roundRect(ctx, -wpx / 2, -hpx / 2, wpx, hpx, 6);
+  ctx.fill();
+  ctx.stroke();
+  // accent stripe
+  ctx.shadowColor = "transparent";
+  ctx.fillStyle = "rgba(59,130,246,.14)";
+  ctx.fillRect(-wpx / 2, -hpx / 2, wpx, 6);
+  ctx.restore();
+}
