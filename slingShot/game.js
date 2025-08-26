@@ -155,3 +155,42 @@ function drawSling(bird) {
   drawPost(left, postW, postH);
   drawPost(right, postW, postH);
 }
+
+function drawBand(a, b, px, color) {
+  ctx.save();
+  ctx.lineWidth = Math.max(1, (w2sx(px) - w2sx(0)));
+  ctx.strokeStyle = color;
+  ctx.lineCap = "round";
+  ctx.beginPath();
+  ctx.moveTo(w2sx(a.x), w2sy(a.y));
+  ctx.lineTo(w2sx(b.x), w2sy(b.y));
+  ctx.stroke();
+  ctx.restore();
+}
+function drawPost(p, w, h) {
+  const x = w2sx(p.x - w / 2);
+  const yTop = w2sy(p.y);
+  const width = w2sx(w) - w2sx(0);
+  const height = w2sy(0) - w2sy(h);
+  ctx.save();
+  const g = ctx.createLinearGradient(0, yTop, 0, yTop + height);
+  g.addColorStop(0, "#a78bfa");
+  g.addColorStop(1, "#7c3aed");
+  ctx.fillStyle = g;
+  ctx.shadowColor = "rgba(15,23,42,.12)";
+  ctx.shadowBlur = 12;
+  ctx.shadowOffsetY = 6;
+  roundRect(ctx, x, yTop, width, height, Math.min(12, width * 0.4));
+  ctx.fill();
+  ctx.restore();
+}
+function roundRect(c, x, y, w, h, r) {
+  const rr = Math.min(r, w / 2, h / 2);
+  c.beginPath();
+  c.moveTo(x + rr, y);
+  c.arcTo(x + w, y, x + w, y + h, rr);
+  c.arcTo(x + w, y + h, x, y + h, rr);
+  c.arcTo(x, y + h, x, y, rr);
+  c.arcTo(x, y, x + w, y, rr);
+  c.closePath();
+}
