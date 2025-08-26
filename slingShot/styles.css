@@ -55,7 +55,7 @@ html,body{
 }
 .stage{
     width:min(95vw, 1100px);
-    margin:12px auto 24px;
+    margin: 0px auto 0px;
     background: linear-gradient(180deg, #ffffffc7, #ffffff);
     border:1px solid rgba(15,23,42,.06);
     border-radius:20px;
@@ -85,12 +85,6 @@ canvas{
     font-size:12px;
     color:var(--muted);
     user-select:none;
-}
-.footer{
-    text-align:center;
-    font-size:12px;
-    color:var(--muted);
-    padding:10px 0 20px;
 }
 @media (max-width:480px){
     .home{ width:36px; height:36px; font-size:18px; border-radius:10px }
