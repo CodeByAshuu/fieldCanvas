@@ -52,3 +52,18 @@ function spawnProjectile() {
     restTimer: 0
   };
 }
+
+function makeTargets() {
+  // simple right-side stack + singles
+  const baseX = 95;
+  const blocks = [];
+  const block = (x, y, w, h) => ({ x, y, w, h, vx: 0, vy: 0, angle: 0, spin: 0, alive: true, falling: false });
+
+  blocks.push(block(baseX, GROUND_H + 6, 4, 8));
+  blocks.push(block(baseX + 6, GROUND_H + 6, 4, 8));
+  blocks.push(block(baseX + 3, GROUND_H + 14, 4, 8));
+  blocks.push(block(baseX + 16, GROUND_H + 5, 4, 6));
+  blocks.push(block(baseX + 24, GROUND_H + 5, 4, 6));
+  blocks.push(block(baseX + 12, GROUND_H + 16, 10, 3));
+  return blocks;
+}
