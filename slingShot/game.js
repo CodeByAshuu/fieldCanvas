@@ -34,3 +34,7 @@ function s2w(clientX, clientY) {                      // screen -> world coords
   const y = WORLD.H - (clientY - rect.top) / rect.height * WORLD.H;
   return { x, y };
 }
+
+function vec(a, b) { return { x: b.x - a.x, y: b.y - a.y }; }
+function len(v) { return Math.hypot(v.x, v.y); }
+function normalize(v) { const L = len(v) || 1; return { x: v.x / L, y: v.y / L }; }
