@@ -346,3 +346,29 @@ function loop(now) {
   render();
   requestAnimationFrame(loop);
 }
+
+function resizeCanvas() {
+  const wrap = document.querySelector('.canvas-wrap');
+  const rect = wrap.getBoundingClientRect();
+  canvas.width = Math.max(1, Math.floor(rect.width * DEVICE_PIXEL_RATIO));
+  canvas.height = Math.max(1, Math.floor(rect.height * DEVICE_PIXEL_RATIO));
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
+  ctx.scale(DEVICE_PIXEL_RATIO, DEVICE_PIXEL_RATIO);
+  scale = rect.width / WORLD.W;
+}
+
+function init() {
+  canvas = document.getElementById('game');
+  ctx = canvas.getContext('2d');
+  window.addEventListener('resize', resizeCanvas, { passive: true });
+  new ResizeObserver(resizeCanvas).observe(canvas);
+
+  // initial world
+  targets = makeTargets();
+  spawnProjectile();
+  setupInput();
+  resizeCanvas();
+  requestAnimationFrame(loop);
+}
+
+init();
