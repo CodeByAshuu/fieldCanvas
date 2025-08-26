@@ -289,3 +289,42 @@ function circleRectCollide(c, r) {
   const dx = cx - nearestX, dy = cy - nearestY;
   return (dx * dx + dy * dy) <= (c.r * c.r);
 }
+
+// input handlers
+function setupInput() {
+  canvas.addEventListener('pointerdown', (e) => {
+    const p = s2w(e.clientX, e.clientY);
+    // start dragging if near sling or projectile ready
+    const d = Math.hypot(p.x - SLING.x, p.y - SLING.y);
+    if (!projectile) return;
+    if (d < SLING.maxPull + 6 && projectile.state === 'ready') {
+      dragging = true;
+      dragPoint = p;
+      canvas.setPointerCapture(e.pointerId);
+    }
+  });
+  canvas.addEventListener('pointermove', (e) => {
+    if (!dragging) return;
+    dragPoint = s2w(e.clientX, e.clientY);
+  });
+  canvas.addEventListener('pointerup', (e) => {
+    if (!dragging) return;
+    dragging = false;
+    // on release, launch projectile opposite to pull
+    if (projectile && projectile.state === 'ready') {
+      const pull = vec({ x: SLING.x, y: SLING.y }, { x: projectile.x, y: projectile.y }); // pull vector
+      const nx = pull.x, ny = pull.y;
+      projectile.vx = nx * SLING.power;
+      projectile.vy = ny * SLING.power;
+      // flip because pull is from sling to bird; we want bird away from sling
+      projectile.vx = projectile.vx;
+      projectile.vy = projectile.vy;
+      // mark flying
+      projectile.state = 'flying';
+      projectile.restTimer = 0;
+    }
+  });
+
+  // prevent context menu on long touch
+  canvas.addEventListener('contextmenu', (e) => e.preventDefault());
+}
